@@ -63,10 +63,16 @@ public class Provider : AuditableEntity
     {
         var value = RequiredText(website, nameof(website), FieldLengths.Website);
 
-        if (!Uri.TryCreate(value, UriKind.Absolute, out var uri) ||
-            (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+        if (!value.Contains("://", StringComparison.Ordinal))
         {
-            throw new ArgumentException("El sitio web debe ser una URL válida con HTTP o HTTPS.", nameof(website));
+            value = $"https://{value}";
+        }
+
+        if (!Uri.TryCreate(value, UriKind.Absolute, out var uri) ||
+            (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps) ||
+            string.IsNullOrWhiteSpace(uri.Host))
+        {
+            throw new ArgumentException("El sitio web no tiene un formato válido.");
         }
 
         return value;

@@ -16,6 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { getApiErrorMessage } from '../../core/utils/api-error.util';
 import { Provider } from '../../core/models/api.models';
 
 type FormMode = 'hidden' | 'create' | 'edit';
@@ -143,8 +144,10 @@ export class ProvidersPageComponent implements OnInit {
             this.notifications.success('Proveedor creado correctamente.');
             this.loadProviders({ silent: true });
           },
-          error: () => {
-            this.notifications.error('No se pudo crear el proveedor.');
+          error: (error) => {
+            this.notifications.error(
+              getApiErrorMessage(error, 'No se pudo crear el proveedor.')
+            );
           },
         });
       return;
@@ -165,8 +168,10 @@ export class ProvidersPageComponent implements OnInit {
           this.notifications.success('Proveedor actualizado correctamente.');
           this.loadProviders({ silent: true });
         },
-        error: () => {
-          this.notifications.error('No se pudo actualizar el proveedor.');
+        error: (error) => {
+          this.notifications.error(
+            getApiErrorMessage(error, 'No se pudo actualizar el proveedor.')
+          );
         },
       });
   }
@@ -190,8 +195,10 @@ export class ProvidersPageComponent implements OnInit {
         );
         this.loadProviders({ silent: true });
       },
-      error: () => {
-        this.notifications.error('No se pudo cambiar el estado del proveedor.');
+      error: (error) => {
+        this.notifications.error(
+          getApiErrorMessage(error, 'No se pudo cambiar el estado del proveedor.')
+        );
       },
     });
   }

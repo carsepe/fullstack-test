@@ -17,6 +17,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { getApiErrorMessage } from '../../core/utils/api-error.util';
 import { Provider, ProviderService } from '../../core/models/api.models';
 
 type FormMode = 'hidden' | 'create' | 'edit';
@@ -160,8 +161,10 @@ export class ProviderServicesPageComponent implements OnInit {
             this.notifications.success('Servicio creado correctamente.');
             this.loadServices({ silent: true });
           },
-          error: () => {
-            this.notifications.error('No se pudo crear el servicio.');
+          error: (error) => {
+            this.notifications.error(
+              getApiErrorMessage(error, 'No se pudo crear el servicio.')
+            );
           },
         });
       return;
@@ -183,8 +186,10 @@ export class ProviderServicesPageComponent implements OnInit {
           this.notifications.success('Servicio actualizado correctamente.');
           this.loadServices({ silent: true });
         },
-        error: () => {
-          this.notifications.error('No se pudo actualizar el servicio.');
+        error: (error) => {
+          this.notifications.error(
+            getApiErrorMessage(error, 'No se pudo actualizar el servicio.')
+          );
         },
       });
   }
@@ -208,8 +213,10 @@ export class ProviderServicesPageComponent implements OnInit {
         );
         this.loadServices({ silent: true });
       },
-      error: () => {
-        this.notifications.error('No se pudo cambiar el estado del servicio.');
+      error: (error) => {
+        this.notifications.error(
+          getApiErrorMessage(error, 'No se pudo cambiar el estado del servicio.')
+        );
       },
     });
   }

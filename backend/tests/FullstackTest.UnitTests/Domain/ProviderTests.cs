@@ -21,6 +21,19 @@ public class ProviderTests
     }
 
     [Fact]
+    public void Constructor_ShouldAcceptWebsiteWithoutScheme()
+    {
+        var provider = new Provider(
+            "900123456-7",
+            "Importaciones Tekus S.A.",
+            "mprueba.com",
+            "contact@tekus.co",
+            "admin@fullstack.test");
+
+        Assert.Equal("https://mprueba.com", provider.Website);
+    }
+
+    [Fact]
     public void Constructor_ShouldRejectInvalidEmail()
     {
         var exception = Assert.Throws<ArgumentException>(() =>

@@ -24,7 +24,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next)
         {
             NotFoundException notFound => (HttpStatusCode.NotFound, notFound.Message),
             BusinessException business => (HttpStatusCode.BadRequest, business.Message),
-            ArgumentException argument => (HttpStatusCode.BadRequest, argument.Message),
+            ArgumentException argument => (HttpStatusCode.BadRequest, CleanArgumentMessage(argument.Message)),
             _ => (HttpStatusCode.InternalServerError, "Ocurrió un error inesperado.")
         };
 
@@ -33,5 +33,13 @@ public class ExceptionHandlingMiddleware(RequestDelegate next)
 
         var payload = JsonSerializer.Serialize(new { message });
         await context.Response.WriteAsync(payload);
+    }
+
+    private static string CleanArgumentMessage(string message)
+    {
+        const string parameterSuffix = " (Parameter '";
+        var index = message.IndexOf(parameterSuffix, StringComparison.Ordinal);
+
+        return index >= 0 ? message[..index] : message;
     }
 }

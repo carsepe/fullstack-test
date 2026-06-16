@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FullstackTest.Api/FullstackTest.Api.csproj" />
+    <Project Path="src/FullstackTest.Application/FullstackTest.Application.csproj" />
+    <Project Path="src/FullstackTest.Domain/FullstackTest.Domain.csproj" />
+    <Project Path="src/FullstackTest.Infrastructure/FullstackTest.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FullstackTest.UnitTests/FullstackTest.UnitTests.csproj" />
+  </Folder>
+</Solution>

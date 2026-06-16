@@ -1,0 +1,28 @@
+# .NET
+**/bin/
+**/obj/
+TestResults/
+*.user
+*.suo
+*.rsuser
+
+# Angular / Node
+**/node_modules/
+**/dist/
+**/.angular/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDEs
+.vs/
+**/.vscode/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS
+Thumbs.db
+Desktop.ini

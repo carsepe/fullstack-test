@@ -9,7 +9,12 @@ public class ProviderService : AuditableEntity
     {
     }
 
-    internal ProviderService(Guid providerId, string name, decimal hourlyRateUsd, string createdBy)
+    public static ProviderService Create(Guid providerId, string name, decimal hourlyRateUsd, string createdBy)
+    {
+        return new ProviderService(providerId, name, hourlyRateUsd, createdBy);
+    }
+
+    private ProviderService(Guid providerId, string name, decimal hourlyRateUsd, string createdBy)
     {
         if (providerId == Guid.Empty)
         {

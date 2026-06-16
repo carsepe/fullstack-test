@@ -38,7 +38,7 @@ public class Provider : AuditableEntity
 
     public ProviderService AddService(string name, decimal hourlyRateUsd, string createdBy)
     {
-        var service = new ProviderService(Id, name, hourlyRateUsd, createdBy);
+        var service = ProviderService.Create(Id, name, hourlyRateUsd, createdBy);
         _services.Add(service);
 
         return service;

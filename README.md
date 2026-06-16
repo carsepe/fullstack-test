@@ -21,6 +21,8 @@ frontend/
 Requisitos:
 
 - .NET SDK 10
+- SQL Server (local)
+- [EF Core CLI](https://learn.microsoft.com/en-us/ef/core/cli/dotnet): `dotnet tool install --global dotnet-ef`
 
 Comandos útiles:
 
@@ -28,8 +30,11 @@ Comandos útiles:
 dotnet restore backend/FullstackTest.slnx
 dotnet build backend/FullstackTest.slnx
 dotnet test backend/FullstackTest.slnx
+dotnet ef database update --project backend/src/FullstackTest.Infrastructure/FullstackTest.Infrastructure.csproj --startup-project backend/src/FullstackTest.Api/FullstackTest.Api.csproj
 dotnet run --project backend/src/FullstackTest.Api/FullstackTest.Api.csproj --launch-profile http
 ```
+
+La connection string se configura en `backend/src/FullstackTest.Api/appsettings.Development.json`.
 
 La API queda disponible en `http://localhost:5065/` y Swagger en `http://localhost:5065/swagger`.
 

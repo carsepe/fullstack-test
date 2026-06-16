@@ -150,6 +150,10 @@ public class ProviderServiceAppService(
             service.ProviderId,
             service.Name,
             service.HourlyRateUsd,
-            service.IsActive);
+            service.IsActive,
+            service.CreatedAtUtc,
+            service.CreatedBy,
+            service.UpdatedAtUtc,
+            service.UpdatedBy);
     }
 }

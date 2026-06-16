@@ -5,4 +5,8 @@ public record ProviderServiceDto(
     Guid ProviderId,
     string Name,
     decimal HourlyRateUsd,
-    bool IsActive);
+    bool IsActive,
+    DateTime CreatedAtUtc,
+    string CreatedBy,
+    DateTime? UpdatedAtUtc,
+    string? UpdatedBy);

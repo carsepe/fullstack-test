@@ -1,0 +1,29 @@
+<mat-toolbar class="app-toolbar">
+  <span class="brand">Fullstack Test</span>
+
+  <nav class="nav-links">
+    <a mat-button routerLink="/dashboard" routerLinkActive="active">
+      <mat-icon>dashboard</mat-icon>
+      Resumen
+    </a>
+    <a mat-button routerLink="/providers" routerLinkActive="active">
+      <mat-icon>business</mat-icon>
+      Proveedores
+    </a>
+    <a mat-button routerLink="/provider-services" routerLinkActive="active">
+      <mat-icon>handyman</mat-icon>
+      Servicios
+    </a>
+  </nav>
+
+  <span class="spacer"></span>
+
+  <button mat-button type="button" class="logout-btn" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    Cerrar sesión
+  </button>
+</mat-toolbar>
+
+<main class="shell-content">
+  <router-outlet />
+</main>

@@ -1,0 +1,188 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-title">
+      <mat-icon>business</mat-icon>
+      <h2>Proveedores</h2>
+    </div>
+    <button mat-flat-button color="primary" type="button" (click)="openCreateForm()">
+      <mat-icon>add</mat-icon>
+      Nuevo proveedor
+    </button>
+  </div>
+
+  <div class="toolbar-row">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="NIT, nombre o correo" />
+    </mat-form-field>
+
+    <mat-checkbox
+      [checked]="includeInactive()"
+      (change)="onIncludeInactiveChange($event.checked)"
+    >
+      Incluir inactivos
+    </mat-checkbox>
+  </div>
+
+  @if (formMode() !== 'hidden') {
+    <mat-card class="form-panel">
+      <mat-card-header>
+        <mat-card-title>
+          {{ formMode() === 'create' ? 'Crear proveedor' : 'Editar proveedor' }}
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="submitForm()" class="entity-form">
+          <mat-form-field appearance="outline">
+            <mat-label>NIT</mat-label>
+            <input matInput formControlName="nit" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="name" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Sitio web</mat-label>
+            <input matInput formControlName="website" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Correo</mat-label>
+            <input matInput type="email" formControlName="email" />
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button mat-button type="button" (click)="cancelForm()" [disabled]="isSaving()">
+              Cancelar
+            </button>
+            <button mat-flat-button color="primary" type="submit" [disabled]="isSaving()">
+              @if (isSaving()) {
+                Guardando...
+              } @else {
+                Guardar
+              }
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+
+  @if (isInitialLoading()) {
+    <div class="loading">
+      <mat-spinner diameter="40" />
+    </div>
+  } @else {
+    <div class="table-panel" [class.is-refreshing]="isRefreshing()">
+      @if (isRefreshing()) {
+        <mat-progress-bar mode="indeterminate" class="table-progress" />
+      }
+
+      <table mat-table [dataSource]="providers()" class="data-table">
+        <ng-container matColumnDef="nit">
+          <th mat-header-cell *matHeaderCellDef>NIT</th>
+          <td mat-cell *matCellDef="let row">{{ row.nit }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Nombre</th>
+          <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="website">
+          <th mat-header-cell *matHeaderCellDef>Sitio web</th>
+          <td mat-cell *matCellDef="let row">{{ row.website }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>Correo</th>
+          <td mat-cell *matCellDef="let row">{{ row.email }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Estado</th>
+          <td mat-cell *matCellDef="let row">
+            <mat-chip [class]="row.isActive ? 'chip-active' : 'chip-inactive'">
+              {{ row.isActive ? 'Activo' : 'Inactivo' }}
+            </mat-chip>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef>Creado</th>
+          <td mat-cell *matCellDef="let row" [matTooltip]="'Por: ' + row.createdBy">
+            {{ row.createdAtUtc | date: 'dd/MM/yyyy HH:mm' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="updatedAt">
+          <th mat-header-cell *matHeaderCellDef>Modificado</th>
+          <td
+            mat-cell
+            *matCellDef="let row"
+            [matTooltip]="row.updatedBy ? 'Por: ' + row.updatedBy : ''"
+            [matTooltipDisabled]="!row.updatedBy"
+          >
+            @if (row.updatedAtUtc) {
+              {{ row.updatedAtUtc | date: 'dd/MM/yyyy HH:mm' }}
+            } @else {
+              —
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let row">
+            <button
+              mat-button
+              type="button"
+              class="action-btn"
+              [disabled]="isRowBusy(row.id)"
+              (click)="openEditForm(row)"
+            >
+              <mat-icon>edit</mat-icon>
+              Editar
+            </button>
+            <button
+              mat-button
+              type="button"
+              class="action-btn"
+              [class.action-btn-warn]="row.isActive"
+              [disabled]="isRowBusy(row.id)"
+              (click)="toggleStatus(row)"
+            >
+              @if (isRowBusy(row.id)) {
+                ...
+              } @else {
+                {{ row.isActive ? 'Inactivar' : 'Activar' }}
+              }
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      @if (providers().length === 0) {
+        <p class="empty-state">No hay proveedores para mostrar.</p>
+      }
+
+      <mat-paginator
+        [length]="totalCount()"
+        [pageIndex]="pageIndex()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="[5, 10, 25]"
+        (page)="onPageChange($event)"
+      />
+    </div>
+  }
+</div>

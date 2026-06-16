@@ -1,0 +1,58 @@
+<div class="login-page">
+  <mat-card class="login-card">
+    <mat-card-header class="login-header">
+      <mat-card-title>Iniciar sesión</mat-card-title>
+      <mat-card-subtitle>Administración de proveedores y servicios</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="demo-credentials">
+        <p class="demo-title">Credenciales de prueba</p>
+        <p><span>Correo:</span> {{ demoCredentials.email }}</p>
+        <p><span>Contraseña:</span> {{ demoCredentials.password }}</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Correo electrónico</mat-label>
+          <input
+            matInput
+            type="email"
+            formControlName="email"
+            autocomplete="username"
+            placeholder="ejemplo@correo.com"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input
+            matInput
+            type="password"
+            formControlName="password"
+            autocomplete="current-password"
+            placeholder="Ingrese su contraseña"
+          />
+        </mat-form-field>
+
+        @if (errorMessage()) {
+          <p class="error">{{ errorMessage() }}</p>
+        }
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="submit-btn"
+          [disabled]="isSubmitting()"
+        >
+          @if (isSubmitting()) {
+            Ingresando...
+          } @else {
+            Ingresar
+          }
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -6,4 +6,8 @@ public record ProviderDto(
     string Name,
     string Website,
     string Email,
-    bool IsActive);
+    bool IsActive,
+    DateTime CreatedAtUtc,
+    string CreatedBy,
+    DateTime? UpdatedAtUtc,
+    string? UpdatedBy);

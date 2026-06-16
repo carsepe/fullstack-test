@@ -1,0 +1,310 @@
+@use '@angular/material' as mat;
+
+$brand-accent: #5bb09f;
+$brand-button: #2b3674;
+$brand-button-dark: #1e284f;
+$brand-surface: #e1f5f1;
+$brand-white: #ffffff;
+$brand-text: #2d3748;
+$brand-muted: #64748b;
+$page-bg: #f8fafa;
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background: $page-bg;
+  color: $brand-text;
+}
+
+@include mat.core();
+
+$theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$blue-palette,
+    tertiary: mat.$blue-palette,
+  ),
+));
+
+html {
+  @include mat.all-component-themes($theme);
+  @include mat.theme-overrides((
+    primary: $brand-button,
+    on-primary: $brand-white,
+    primary-container: #e8ecf7,
+    on-primary-container: $brand-button-dark,
+    secondary-container: $brand-surface,
+    surface: $brand-white,
+    surface-container-lowest: $brand-white,
+    surface-container-low: $brand-white,
+    surface-container: $brand-white,
+    surface-container-high: $brand-white,
+    surface-container-highest: $brand-white,
+  ));
+}
+
+:root {
+  --brand-accent: #{$brand-accent};
+  --brand-accent-dark: #489a8a;
+  --brand-button: #{$brand-button};
+  --brand-button-dark: #{$brand-button-dark};
+  --brand-surface: #{$brand-surface};
+  --brand-white: #{$brand-white};
+  --brand-text: #{$brand-text};
+  --brand-muted: #{$brand-muted};
+  --page-bg: #{$page-bg};
+}
+
+// Botones primarios: azul marino pill (estilo Tekus)
+.mat-mdc-unelevated-button.mat-primary:not(:disabled),
+.mat-mdc-raised-button.mat-primary:not(:disabled) {
+  --mdc-filled-button-container-color: var(--brand-button);
+  --mdc-filled-button-label-text-color: var(--brand-white);
+  border-radius: 9999px !important;
+  padding-inline: 1.5rem !important;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background-color: var(--brand-button) !important;
+  box-shadow: 0 2px 8px rgba(43, 54, 116, 0.3);
+
+  .mat-icon {
+    margin-right: 0.25rem;
+  }
+
+  &:hover {
+    background-color: var(--brand-button-dark) !important;
+  }
+}
+
+.page-container {
+  padding: 2rem 2.5rem;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+
+  mat-icon {
+    color: var(--brand-accent);
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--brand-text);
+    letter-spacing: -0.02em;
+  }
+}
+
+.toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.25rem;
+  background: var(--brand-white);
+  border: 1px solid #e8eceb;
+  border-radius: 12px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.metric {
+  font-size: 2.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--brand-accent-dark);
+  line-height: 1.1;
+}
+
+.stat-card {
+  border-radius: 12px !important;
+  border: 1px solid #e8eceb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(91, 176, 159, 0.12) !important;
+    transform: translateY(-2px);
+  }
+
+  mat-card-content {
+    padding: 1.5rem !important;
+  }
+}
+
+.stat-card-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 12px;
+  background: var(--brand-surface);
+  color: var(--brand-accent);
+
+  mat-icon {
+    font-size: 1.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+.stat-label {
+  margin: 0 0 0.25rem;
+  font-size: 0.875rem;
+  color: var(--brand-muted);
+  font-weight: 500;
+}
+
+.table-panel {
+  position: relative;
+  background: var(--brand-white);
+  border: 1px solid #e8eceb;
+  border-radius: 12px;
+  overflow-x: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: opacity 0.15s ease;
+
+  &.is-refreshing {
+    opacity: 0.75;
+    pointer-events: none;
+  }
+}
+
+.table-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.data-table {
+  width: 100%;
+
+  .mat-mdc-header-row {
+    background: #f8fafa;
+  }
+
+  .mat-mdc-header-cell {
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--brand-muted);
+    border-bottom: 1px solid #e8eceb;
+  }
+
+  .mat-mdc-row {
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background: #f8fcfb;
+    }
+
+    &:not(:last-child) .mat-mdc-cell {
+      border-bottom: 1px solid #f0f2f1;
+    }
+  }
+
+  .mat-mdc-cell {
+    color: var(--brand-text);
+    font-size: 0.9375rem;
+  }
+}
+
+.form-panel {
+  margin-bottom: 1.5rem;
+  background: var(--brand-white);
+  border: 1px solid #e8eceb;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  mat-card-header {
+    padding: 1.25rem 1.5rem 0;
+  }
+
+  mat-card-content {
+    padding: 0 1.5rem 1.5rem !important;
+  }
+}
+
+.chip-active {
+  --mat-chip-label-text-color: var(--brand-accent-dark);
+  --mat-chip-elevated-container-color: var(--brand-surface);
+}
+
+.chip-inactive {
+  --mat-chip-label-text-color: #c62828;
+  --mat-chip-elevated-container-color: #ffebee;
+}
+
+.snack-success {
+  --mat-snack-bar-container-color: var(--brand-accent);
+  --mat-snack-bar-supporting-text-color: var(--brand-white);
+  --mat-snack-bar-button-color: var(--brand-surface);
+}
+
+.snack-error {
+  --mat-snack-bar-button-color: #ffcdd2;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.error {
+  color: #c62828;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--brand-muted);
+  padding: 2.5rem 1rem;
+  margin: 0;
+}
+
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-focus-outline-color: var(--brand-accent);
+  --mdc-outlined-text-field-focus-label-text-color: var(--brand-accent-dark);
+  --mdc-outlined-text-field-caret-color: var(--brand-accent-dark);
+  --mat-form-field-focus-select-arrow-color: var(--brand-accent-dark);
+}
+
+.mat-mdc-form-field.mat-form-field-invalid {
+  --mdc-outlined-text-field-focus-outline-color: #c62828;
+  --mdc-outlined-text-field-focus-label-text-color: #c62828;
+  --mdc-outlined-text-field-caret-color: #c62828;
+}

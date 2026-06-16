@@ -114,6 +114,10 @@ public class ProviderAppService(
             provider.Name,
             provider.Website,
             provider.Email,
-            provider.IsActive);
+            provider.IsActive,
+            provider.CreatedAtUtc,
+            provider.CreatedBy,
+            provider.UpdatedAtUtc,
+            provider.UpdatedBy);
     }
 }

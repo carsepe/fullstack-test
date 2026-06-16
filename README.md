@@ -53,3 +53,8 @@ npm test -- --watch=false
 ```
 
 El comando `npm start` ejecuta `ng serve`. La aplicación queda disponible localmente en `http://localhost:4200/`.
+
+## Flujo de ramas
+
+- `main`: versión estable del proyecto.
+- `dev`: rama de desarrollo para los cambios de la prueba.

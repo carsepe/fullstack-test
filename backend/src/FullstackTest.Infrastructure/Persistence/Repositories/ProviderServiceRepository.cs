@@ -6,10 +6,16 @@ namespace FullstackTest.Infrastructure.Persistence.Repositories;
 
 public class ProviderServiceRepository(AppDbContext context) : IProviderServiceRepository
 {
-    public async Task<ProviderService?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<ProviderService?> GetByIdAsync(Guid id, bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        return await context.ProviderServices
-            .FirstOrDefaultAsync(service => service.Id == id, cancellationToken);
+        var query = context.ProviderServices.AsQueryable();
+
+        if (!includeInactive)
+        {
+            query = query.Where(service => service.IsActive);
+        }
+
+        return await query.FirstOrDefaultAsync(service => service.Id == id, cancellationToken);
     }
 
     public async Task<(IReadOnlyList<ProviderService> Items, int TotalCount)> GetPagedAsync(
@@ -19,9 +25,15 @@ public class ProviderServiceRepository(AppDbContext context) : IProviderServiceR
         bool sortDescending,
         int page,
         int pageSize,
+        bool includeInactive = false,
         CancellationToken cancellationToken = default)
     {
         var query = context.ProviderServices.AsQueryable();
+
+        if (!includeInactive)
+        {
+            query = query.Where(service => service.IsActive);
+        }
 
         if (providerId.HasValue)
         {
@@ -58,19 +70,33 @@ public class ProviderServiceRepository(AppDbContext context) : IProviderServiceR
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+    public async Task<int> CountAsync(bool activeOnly = false, CancellationToken cancellationToken = default)
     {
-        return await context.ProviderServices.CountAsync(cancellationToken);
+        var query = context.ProviderServices.AsQueryable();
+
+        if (activeOnly)
+        {
+            query = query.Where(service => service.IsActive);
+        }
+
+        return await query.CountAsync(cancellationToken);
     }
 
-    public async Task<decimal?> GetAverageHourlyRateAsync(CancellationToken cancellationToken = default)
+    public async Task<decimal?> GetAverageHourlyRateAsync(bool activeOnly = true, CancellationToken cancellationToken = default)
     {
-        if (!await context.ProviderServices.AnyAsync(cancellationToken))
+        var query = context.ProviderServices.AsQueryable();
+
+        if (activeOnly)
+        {
+            query = query.Where(service => service.IsActive);
+        }
+
+        if (!await query.AnyAsync(cancellationToken))
         {
             return null;
         }
 
-        return await context.ProviderServices.AverageAsync(service => service.HourlyRateUsd, cancellationToken);
+        return await query.AverageAsync(service => service.HourlyRateUsd, cancellationToken);
     }
 
     private static IQueryable<ProviderService> ApplySorting(IQueryable<ProviderService> query, string? sortBy, bool sortDescending)

@@ -6,10 +6,16 @@ namespace FullstackTest.Infrastructure.Persistence.Repositories;
 
 public class ProviderRepository(AppDbContext context) : IProviderRepository
 {
-    public async Task<Provider?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Provider?> GetByIdAsync(Guid id, bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        return await context.Providers
-            .FirstOrDefaultAsync(provider => provider.Id == id, cancellationToken);
+        var query = context.Providers.AsQueryable();
+
+        if (!includeInactive)
+        {
+            query = query.Where(provider => provider.IsActive);
+        }
+
+        return await query.FirstOrDefaultAsync(provider => provider.Id == id, cancellationToken);
     }
 
     public async Task<(IReadOnlyList<Provider> Items, int TotalCount)> GetPagedAsync(
@@ -18,9 +24,15 @@ public class ProviderRepository(AppDbContext context) : IProviderRepository
         bool sortDescending,
         int page,
         int pageSize,
+        bool includeInactive = false,
         CancellationToken cancellationToken = default)
     {
         var query = context.Providers.AsQueryable();
+
+        if (!includeInactive)
+        {
+            query = query.Where(provider => provider.IsActive);
+        }
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -44,6 +56,11 @@ public class ProviderRepository(AppDbContext context) : IProviderRepository
         return (items, totalCount);
     }
 
+    public Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return context.Providers.AnyAsync(provider => provider.Id == id, cancellationToken);
+    }
+
     public async Task AddAsync(Provider provider, CancellationToken cancellationToken = default)
     {
         await context.Providers.AddAsync(provider, cancellationToken);
@@ -56,9 +73,16 @@ public class ProviderRepository(AppDbContext context) : IProviderRepository
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+    public async Task<int> CountAsync(bool activeOnly = false, CancellationToken cancellationToken = default)
     {
-        return await context.Providers.CountAsync(cancellationToken);
+        var query = context.Providers.AsQueryable();
+
+        if (activeOnly)
+        {
+            query = query.Where(provider => provider.IsActive);
+        }
+
+        return await query.CountAsync(cancellationToken);
     }
 
     private static IQueryable<Provider> ApplySorting(IQueryable<Provider> query, string? sortBy, bool sortDescending)

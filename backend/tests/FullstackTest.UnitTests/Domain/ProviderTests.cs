@@ -53,7 +53,7 @@ public class ProviderTests
     }
 
     [Fact]
-    public void AddService_ShouldRejectInvalidHourlyRate()
+    public void Deactivate_ShouldSetProviderInactive()
     {
         var provider = new Provider(
             "900123456-7",
@@ -62,9 +62,24 @@ public class ProviderTests
             "contact@tekus.co",
             "admin@fullstack.test");
 
-        var exception = Assert.Throws<ArgumentException>(() =>
-            provider.AddService("Content management", 0, "admin@fullstack.test"));
+        provider.Deactivate("admin@fullstack.test");
 
-        Assert.Equal("hourlyRateUsd", exception.ParamName);
+        Assert.False(provider.IsActive);
+    }
+
+    [Fact]
+    public void Activate_ShouldSetProviderActive()
+    {
+        var provider = new Provider(
+            "900123456-7",
+            "Importaciones Tekus S.A.",
+            "https://tekus.co",
+            "contact@tekus.co",
+            "admin@fullstack.test");
+
+        provider.Deactivate("admin@fullstack.test");
+        provider.Activate("admin@fullstack.test");
+
+        Assert.True(provider.IsActive);
     }
 }

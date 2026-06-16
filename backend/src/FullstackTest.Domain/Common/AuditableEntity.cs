@@ -28,6 +28,12 @@ public abstract class AuditableEntity : Entity
         SetUpdatedAudit(updatedBy);
     }
 
+    public void Activate(string updatedBy)
+    {
+        IsActive = true;
+        SetUpdatedAudit(updatedBy);
+    }
+
     protected static string RequiredText(string value, string fieldName, int maxLength)
     {
         if (string.IsNullOrWhiteSpace(value))

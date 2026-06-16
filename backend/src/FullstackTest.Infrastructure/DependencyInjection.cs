@@ -1,4 +1,8 @@
 using FullstackTest.Application.Abstractions;
+using FullstackTest.Application.Auth;
+using FullstackTest.Application.Common;
+using FullstackTest.Infrastructure.Email;
+using FullstackTest.Infrastructure.Identity;
 using FullstackTest.Infrastructure.Persistence;
 using FullstackTest.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +20,10 @@ public static class DependencyInjection
 
         services.AddScoped<IProviderRepository, ProviderRepository>();
         services.AddScoped<IProviderServiceRepository, ProviderServiceRepository>();
+        services.AddScoped<ICurrentUserService, HttpContextCurrentUserService>();
+        services.AddScoped<IEmailSender, LoggingEmailSender>();
+        services.AddScoped<IAuthAppService, AuthAppService>();
+        services.AddSingleton<JwtTokenService>();
 
         return services;
     }
